@@ -1,15 +1,27 @@
 import pandas as pd
 import markovify as mk
 from itertools import chain
+import spacy 
 
 
-tweets_df = pd.read_csv("data/raw/jordanbpeterson_tweets.csv")
+tweets_df = pd.read_csv("data/raw/TateTheTalisman_tweets.csv")
 
 
-
-N = 1000
+N = 300
 tweet_subset = tweets_df["content"][0:N]
 text = "".join(chain.from_iterable(tweet_subset))
+
+
+class POSifiedText(mk.Text):
+    def word_split(self, sentence):
+        return ["::".join((word.orth_, word.pos_)) for word in text(sentence)]
+
+    def word_join(self, words):
+        sentence = " ".join(word.split("::")[0] for word in words)
+        return sentence
+
+
+
 markov_model = mk.Text(text)
 
 

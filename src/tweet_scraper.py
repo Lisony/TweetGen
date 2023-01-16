@@ -1,27 +1,34 @@
 import pandas as pd
 import snscrape.modules.twitter as sntwitter
 from tqdm import tqdm
+from os.path import exists
 
 
-def scrape_tweet_to_csv(author, n, path):
-    scraper = sntwitter.TwitterSearchScraper(f"from:{author}")
-    
-    tweets = []
-    for i, tweet in enumerate(scraper.get_items()):
-        if i > 20000:
-            break
+def scrape_tweet_to_csv(author, n = 5000, path = "data/raw/"):
+    file_path = path + author
+    if exists(f"{file_path}_tweet.csv"):
+        print(f"Scrapping tweets from {author}\n")
+
+        scraper = sntwitter.TwitterSearchScraper(f"from:{author}")
         
-        if tweet.rawContent.startswith("@"):
-            continue
+        tweets = []
+        for i, tweet in enumerate(scraper.get_items()):
+            if i > 20000:
+                break
+            
+            if tweet.rawContent.startswith("@"):
+                continue
+            
+            if len(tweets) >= n:
+                break
+            
+            tweets.append([tweet.user.username, tweet.rawContent])
         
-        if len(tweets) >= n:
-            break
+        tweets_df = pd.DataFrame(tweets, columns=["author", "content"])
         
-        tweets.append([tweet.user.username, tweet.rawContent])
-    
-    tweets_df = pd.DataFrame(tweets, columns=["author", "content"])
-    
-    tweets_df.to_csv(path + f"{author}_tweets.csv", index=False)
+        tweets_df.to_csv(path + f"{author}_tweets.csv", index=False)
+    else:
+        print("Tweets already scrapped!\n")
     
     
 
