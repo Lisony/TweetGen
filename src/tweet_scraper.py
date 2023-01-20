@@ -6,13 +6,19 @@ from os.path import exists
 
 def scrape_tweet_to_csv(author, n = 5000, path = "data/raw/"):
     file_path = path + author
-    if exists(f"{file_path}_tweet.csv"):
-        print(f"Scrapping tweets from {author}\n")
+    print(file_path)
+    if exists(f"{file_path}_tweets.csv"):
+        print("Tweets already scrapped!\n")
+    else:
+        print(f"Scrapping tweets from {author}...\n")
 
         scraper = sntwitter.TwitterSearchScraper(f"from:{author}")
         
         tweets = []
+        limit = 20000
         for i, tweet in enumerate(scraper.get_items()):
+            if i%1000:
+                print(f"Progress:{(i/limit)*100}%")
             if i > 20000:
                 break
             
@@ -27,8 +33,7 @@ def scrape_tweet_to_csv(author, n = 5000, path = "data/raw/"):
         tweets_df = pd.DataFrame(tweets, columns=["author", "content"])
         
         tweets_df.to_csv(path + f"{author}_tweets.csv", index=False)
-    else:
-        print("Tweets already scrapped!\n")
+        
     
     
 

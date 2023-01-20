@@ -1,2 +1,3 @@
 [test]
-twitter_nickname : "jordanbpeterson"
+twitter_nickname : krzysztofbosak
+n_tweets : 5000

@@ -4,11 +4,12 @@ from itertools import chain
 import spacy 
 
 
-tweets_df = pd.read_csv("data/raw/TateTheTalisman_tweets.csv")
+tweets_df = pd.read_csv("data/raw/AndrzejDuda_tweets.csv")
 
 
-N = 300
+N = 4000
 tweet_subset = tweets_df["content"][0:N]
+print(len(tweet_subset))
 text = "".join(chain.from_iterable(tweet_subset))
 
 
@@ -23,6 +24,7 @@ class POSifiedText(mk.Text):
 
 
 markov_model = mk.Text(text)
+
 
 
 for i in range(5):
