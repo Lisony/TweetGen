@@ -1,18 +1,13 @@
 import pandas as pd
 import markovify as mk
 from itertools import chain
-import spacy 
+import spacy
 
 
-tweets_df = pd.read_csv("data/raw/AndrzejDuda_tweets.csv")
-
-
-N = 4000
-tweet_subset = tweets_df["content"][0:N]
-print(len(tweet_subset))
-text = "".join(chain.from_iterable(tweet_subset))
-
-
+def generate_tweets(N):
+    return [markov_model.make_short_sentence(300) for _ in range(N)]
+    
+            
 class POSifiedText(mk.Text):
     def word_split(self, sentence):
         return ["::".join((word.orth_, word.pos_)) for word in text(sentence)]
@@ -23,9 +18,27 @@ class POSifiedText(mk.Text):
 
 
 
-markov_model = mk.Text(text)
+# TO DO VALIDATE GENERETED TWEETS
+# MAYBE JACCARD SIMILARITY?
 
 
 
-for i in range(5):
-    print(markov_model.make_sentence())
+
+tweets_df = pd.read_csv("data/raw/krzysztofbosak_tweets.csv")
+file_path= "results/"
+N = 4000
+tweet_subset = tweets_df["content"][0:N]
+tweet_author = tweets_df.iloc[0].author
+text = "".join(chain.from_iterable(tweet_subset))
+
+
+# make a model, generate tweets and save to csv
+num_tweets = 50
+markov_model = mk.Text(text, state_size=3)
+gen_tweets_df = pd.DataFrame([tweet_author]*num_tweets, columns=["author"])
+gen_tweets = generate_tweets(num_tweets)
+gen_tweets_df["gen_content"] = gen_tweets
+gen_tweets_df.to_csv(file_path + f"{tweet_author}_tweets_gen.csv", index=False)
+
+
+

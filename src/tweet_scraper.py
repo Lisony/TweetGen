@@ -20,6 +20,8 @@ def scrape_tweet_to_csv(author, n = 5000, path = "data/raw/"):
         for i, tweet in enumerate(scraper.get_items()):
             author = tweet.user.username
             tweet_text = tweet.rawContent
+            
+        
             if i%1000:
                 print(f"Progress:{(i/limit)*100}%")
             if i > 20000:
@@ -34,6 +36,9 @@ def scrape_tweet_to_csv(author, n = 5000, path = "data/raw/"):
             # if tweet contains link do not include it 
             if not re.search("https://", tweet_text):
                 tweets.append([author, tweet_text])
+                
+            if not re.search("http://", tweet_text):
+                tweets.append([author, tweet_text])
         
         tweets_df = pd.DataFrame(tweets, columns=["author", "content"])
         
@@ -44,7 +49,7 @@ def scrape_tweet_to_csv(author, n = 5000, path = "data/raw/"):
 
 if __name__ == "__main__":
     # Authors
-    authors = ["jordanbpeterson", "elonmusk", "AndrzejDuda", "Cobratate", "TateTheTalisman"]
+    authors = ["krzysztofbosak"]
     file_path = "data/raw/"
     
     for author in tqdm(authors):
