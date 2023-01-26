@@ -3,6 +3,7 @@ import argparse
 import time
 
 from src.tweet_scraper import scrape_tweet_to_csv
+from src.markov_chain_model import model
 
 
 
@@ -22,6 +23,8 @@ if __name__ == "__main__":
 
     author = str(config[params]["twitter_nickname"])
     scrape_tweet_to_csv(author)
+    markov_model = model(author)
+    markov_model.save_to_csv()
 
 
     print(f"---Script execution time: {time.time() - timerStart} seconds.---")
