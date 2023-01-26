@@ -14,7 +14,6 @@ class model:
         self.tweets = self.generate_tweets(text , n_tweets, sentence_len)
 
     def save_to_csv(self):
-        print(self.author)
         gen_tweets_df = pd.DataFrame([self.author]*self.n_tweets, columns=['author'])
         gen_tweets_df["gen_content"] = self.tweets
         gen_tweets_df.to_csv("results/" + f"{self.author}_tweets_gen.csv", index=False)
