@@ -44,17 +44,4 @@ def scrape_tweet_to_csv(author, n = 5000, path = "data/raw/"):
         
         tweets_df.to_csv(path + f"{author}_tweets.csv", index=False)
         
-    
-    
-
-if __name__ == "__main__":
-    # Authors
-    authors = ["krzysztofbosak"]
-    file_path = "data/raw/"
-    
-    for author in tqdm(authors):
-        scrape_tweet_to_csv(author, 5000, file_path)
-    
-    
-    
-    
+ 
